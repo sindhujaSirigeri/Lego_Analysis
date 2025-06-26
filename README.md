@@ -46,6 +46,8 @@ Throughout this project, I learned and applied the following skills:
 - **Schema Creation**:
   - Created 12 interrelated tables including `sets`, `parts`, `themes`, `colors`, `inventories`, and more.
   - Used `CREATE TABLE` and `ALTER TABLE` statements to define fields and relationships.
+  - ![image](https://github.com/user-attachments/assets/964da86a-eba1-465b-8e39-e76cd9b432c6)
+
 
 - **Primary Keys**:
   - Added unique identifiers to each table using `ALTER TABLE ... ADD PRIMARY KEY (...)`.
