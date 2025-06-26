@@ -3,6 +3,9 @@
 ## Overview
 This project involved analyzing a dataset of LEGO sets using PostgreSQL to extract valuable insights about themes, parts, minifigures, colors, and relationships between LEGO elements. The dataset was processed through SQL scripts that created relational tables, defined constraints, and executed analytical queries.
 
+📅 **The raw data was downloaded on 23-06-2025**  
+🔗 **Source**: [Rebrickable Downloads](https://rebrickable.com/downloads/)
+
 The project covered everything from cleaning raw data and defining relationships using foreign keys, to identifying trends in LEGO set releases, part usage, and color variations. The final database supports a rich and normalized schema optimized for querying and further exploration.
 
 ---
