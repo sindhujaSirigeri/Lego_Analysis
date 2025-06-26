@@ -194,3 +194,114 @@ ALTER TABLE analysis.parts
 ADD CONSTRAINT fk_part_relationship
 FOREIGN KEY (part_relationship_id)
 REFERENCES analysis.part_relationships(id);
+
+
+
+--1. Count the number of sets per theme
+-- Count how many LEGO sets exist for each theme
+SELECT 
+    t.id AS theme_id,
+    t.name AS theme_name,
+    COUNT(s.set_num) AS number_of_sets
+FROM 
+    themes t
+LEFT JOIN 
+    sets s ON t.id = s.theme_id
+GROUP BY 
+    t.id, t.name
+ORDER BY 
+    number_of_sets DESC;
+	
+--2. Identify the most used LEGO parts and most common colors
+-- Find the most used LEGO parts based on quantity in inventory_parts
+SELECT 
+    p.part_num,
+    p.name AS part_name,
+    SUM(ip.quantity) AS total_quantity_used
+FROM 
+    parts p
+JOIN 
+    inventory_parts ip ON p.part_num = ip.part_num
+GROUP BY 
+    p.part_num, p.name
+ORDER BY 
+    total_quantity_used DESC
+LIMIT 10;
+-- Find the most common colors used based on quantity in inventory_parts
+SELECT 
+    c.id AS color_id,
+    c.name AS color_name,
+    SUM(ip.quantity) AS total_quantity_used
+FROM 
+    colors c
+JOIN 
+    inventory_parts ip ON c.id = ip.color_id
+GROUP BY 
+    c.id, c.name
+ORDER BY 
+    total_quantity_used DESC
+LIMIT 10;
+
+--3. Analyze relationships between parent and child LEGO parts
+-- Count how many children each parent part has
+SELECT 
+    pr.parent_part_num,
+    p.name AS parent_part_name,
+    COUNT(pr.child_part_num) AS number_of_children
+FROM 
+    part_relationships pr
+LEFT JOIN 
+    parts p ON pr.parent_part_num = p.part_num
+GROUP BY 
+    pr.parent_part_num, p.name
+ORDER BY 
+    number_of_children DESC
+LIMIT 10;
+
+--4. Measure growth in LEGO sets and themes over time
+-- Count number of sets released per year to see growth over time
+SELECT 
+    year,
+    COUNT(set_num) AS sets_released
+FROM 
+    sets
+WHERE year IS NOT NULL
+GROUP BY 
+    year
+ORDER BY 
+    year;
+
+-- Count number of themes introduced over time (assuming theme id or name has creation date - 
+--if no date, use number of unique themes over years sets were released)
+-- Since themes table has no year, we approximate by earliest set year per theme:
+
+SELECT
+    t.id AS theme_id,
+    t.name AS theme_name,
+    MIN(s.year) AS first_appearance_year
+FROM 
+    themes t
+JOIN 
+    sets s ON t.id = s.theme_id
+GROUP BY
+    t.id, t.name
+ORDER BY
+    first_appearance_year;
+
+-- Count cumulative number of themes introduced by year
+WITH first_theme_year AS (
+    SELECT
+        t.id,
+        MIN(s.year) AS year_introduced
+    FROM themes t
+    JOIN sets s ON t.id = s.theme_id
+    GROUP BY t.id
+)
+SELECT 
+    year_introduced,
+    COUNT(id) AS themes_introduced_that_year,
+    SUM(COUNT(id)) OVER (ORDER BY year_introduced) AS cumulative_themes
+FROM first_theme_year
+GROUP BY year_introduced
+ORDER BY year_introduced;
+

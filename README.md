@@ -79,3 +79,5 @@ Throughout this project, I learned and applied the following skills:
 ## Conclusion
 
 This project provided comprehensive hands-on experience with SQL and relational database design using a real-world dataset. By importing and cleaning data, defining relationships with constraints, and performing detailed analysis, I developed a solid understanding of how to model and extract insights from complex datasets. These skills are highly applicable to any future work involving data engineering, analytics, or backend database management.
+
+
